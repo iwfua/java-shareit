@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.dto;
+package ru.practicum.shareit.request.model;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -7,13 +7,10 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
-public class ItemRequestDto {
+public class ItemRequest {
     private final Integer id;
 
     @NotBlank
