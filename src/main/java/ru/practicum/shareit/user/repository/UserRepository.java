@@ -7,8 +7,6 @@ public interface UserRepository {
 
     User addUser(User user);
 
-    Boolean existUserWithEmail(String email);
-
     User updateUser(User user, Integer id);
 
     User deleteUser(Integer userId);

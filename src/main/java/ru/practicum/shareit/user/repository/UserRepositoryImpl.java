@@ -1,24 +1,28 @@
 package ru.practicum.shareit.user.repository;
 
 import jakarta.validation.ValidationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+@Slf4j
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class);
     private final Map<Integer, User> users;
+    private final Set<String> emailUniqueSet;
     private int userIdAtMoment;
 
     public UserRepositoryImpl() {
         this.users = new HashMap<>();
+        this.emailUniqueSet = new HashSet<>();
     }
 
     public User addUser(User user) {
@@ -26,10 +30,15 @@ public class UserRepositoryImpl implements UserRepository {
             throw new ValidationException("user al-ready exist");
         }
 
+        if (emailUniqueSet.contains(user.getEmail())) {
+            throw new ConflictException("user with this email al-ready exist");
+        }
+
         int userId = hasNextUserId();
         user.setId(userId);
         users.put(userId, user);
         log.info("Successfully user with {} created", userId);
+        emailUniqueSet.add(user.getEmail());
         return users.get(userId);
     }
 
@@ -40,21 +49,27 @@ public class UserRepositoryImpl implements UserRepository {
                 .orElseThrow(() -> new NotFoundException("user not found"));
     }
 
-    public Boolean existUserWithEmail(String email) {
-        return users.values().stream()
-                .anyMatch(user -> user.getEmail().equalsIgnoreCase(email));
-    }
-
     @Override
-    public User updateUser(User user, Integer id) {
+    public User updateUser(User newUser, Integer id) {
 
         if (users.get(id) == null) {
             log.info("user not found");
             throw new NotFoundException("user not found");
         }
 
-        user.setId(id);
-        users.put(id, user);
+        User oldUser = users.get(id);
+
+        if (newUser.getName() != null) {
+            oldUser.setName(newUser.getName());
+        }
+
+        if (newUser.getEmail() != null) {
+            if (emailUniqueSet.contains(newUser.getEmail())) {
+                throw new ConflictException("user with this email al-ready exist");
+            }
+            oldUser.setEmail(newUser.getEmail());
+        }
+
         log.info("user with id={} updated", id);
         return users.get(id);
     }

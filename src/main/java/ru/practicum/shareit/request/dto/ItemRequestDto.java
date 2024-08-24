@@ -7,14 +7,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
 public class ItemRequestDto {
-    private final Integer id;
+    private Integer id;
 
     @NotBlank
     private String description;

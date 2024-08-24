@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 public class ItemRequest {
-    private final Integer id;
+    private Integer id;
 
     @NotBlank
     private String description;
