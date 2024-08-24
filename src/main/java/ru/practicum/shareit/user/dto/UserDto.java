@@ -1,24 +1,21 @@
-package ru.practicum.shareit.request.dto;
+package ru.practicum.shareit.user.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
-@Data
 @Builder(toBuilder = true)
+@Data
 @AllArgsConstructor
-public class ItemRequestDto {
+public class UserDto {
     private Integer id;
 
     @NotBlank
-    private String description;
+    private String name;
 
+    @Email
     @NotBlank
-    private Integer requestorId;
-
-    @NotBlank
-    private LocalDateTime created;
+    private String email;
 }
