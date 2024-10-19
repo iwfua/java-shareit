@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.dto;
+package ru.practicum.shareit.request.model;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
-public class ItemRequestDto {
+public class ItemRequest {
     private Integer id;
 
     @NotBlank
