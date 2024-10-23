@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable(name = "id") Integer userId) {
+    public UserDto getUserById(@PathVariable(name = "id") Long userId) {
         log.info("Пришел GET-запрос /users/{}", userId);
         UserDto userDto = userService.findUserById(userId);
         log.info("Отправлен ответ с телом {}", userDto);
@@ -36,15 +36,14 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public UserDto updateUser(@RequestBody UserDto userDto,
-                              @PathVariable(name = "id") Integer userId) {
+                              @PathVariable(name = "id") Long userId) {
         return userService.updateUser(userDto, userId);
     }
 
     @DeleteMapping("/{id}")
-    public UserDto deleteUser(@PathVariable(name = "id") Integer userId) {
+    public void deleteUser(@PathVariable(name = "id") Long userId) {
         log.info("Пришел DELETE-запрос /users/{}", userId);
-        UserDto userDto = userService.deleteUser(userId);
-        log.info("Отправлен DELETE-ответ с телом {}", userDto);
-        return userDto;
+        userService.deleteUser(userId);
+        log.info("Отправлен DELETE-ответ с телом id={}", userId);
     }
 }

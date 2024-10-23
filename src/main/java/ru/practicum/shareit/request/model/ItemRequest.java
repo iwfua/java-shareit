@@ -17,7 +17,7 @@ public class ItemRequest {
     private String description;
 
     @NotBlank
-    private Integer requestorId;
+    private Integer requesterId;
 
     @NotBlank
     private LocalDateTime created;
