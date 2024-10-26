@@ -38,7 +38,9 @@ public class BookingServiceImpl implements BookingService {
         log.info("Создание бронирования с bookerId={} и bookingRequestDto={}", bookerId, bookingRequestDto);
 
         User user = UserMapper.fromDto(userService.findUserById(bookerId));
-        Item item = ItemMapper.fromDto(itemService.findItemById(bookingRequestDto.getItemId()));
+
+        Item item = ItemMapper.fromItemResponseDto(itemService.findItemById(bookingRequestDto.getItemId()));
+
 
         validationBooking(bookingRequestDto, item, user);
 
@@ -71,7 +73,7 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("Owner cannot be a booker");
         }
 
-        if (!booking.getItem().getOwnerId().equals(ownerId)) {
+        if (!booking.getItem().getOwner().getId().equals(ownerId)) {
             log.error("Ошибка валидации: некорректный владелец с ownerId={}", ownerId);
             throw new ValidationException("OwnerId is incorrect");
         }
@@ -98,7 +100,7 @@ public class BookingServiceImpl implements BookingService {
                     throw new NotFoundException("Booking not found");
                 });
 
-        if (!booking.getBooker().getId().equals(userId) && !booking.getItem().getOwnerId().equals(userId)) {
+        if (!booking.getBooker().getId().equals(userId) && !booking.getItem().getOwner().getId().equals(userId)) {
             log.error("Конфликт прав доступа: userId={} не является владельцем или автором бронирования", userId);
             throw new ConflictException("Only the owner or the booker can view this booking");
         }
@@ -175,7 +177,7 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("End date cannot be before start date");
         }
 
-        if (item.getOwnerId().equals(booker.getId())) {
+        if (item.getOwner().getId().equals(booker.getId())) {
             log.error("Ошибка валидации: владелец не может бронировать свою вещь, itemId={}, bookerId={}", item.getId(), booker.getId());
             throw new ConflictException("Owner cannot be booker");
         }

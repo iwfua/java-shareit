@@ -3,7 +3,9 @@ package ru.practicum.shareit.user.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UpdateRequestUserDto;
+import ru.practicum.shareit.user.dto.UpdateResponseUserDto;
+import ru.practicum.shareit.user.dto.CreateUserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -20,31 +22,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto findUserById(Long id) {
-        return UserMapper.toDto(userRepository.findById(id)
+    public CreateUserDto findUserById(Long id) {
+        return UserMapper.toCreateUserDto(userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("user not found")));
     }
 
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public CreateUserDto createUser(CreateUserDto userDto) {
         User user = UserMapper.fromDto(userDto);
-        return UserMapper.toDto(userRepository.save(user));
+        return UserMapper.toCreateUserDto(userRepository.save(user));
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto, Long userId) {
+    public UpdateResponseUserDto updateUser(UpdateRequestUserDto newUserDto, Long userId) {
 
         User user = UserMapper.fromDto(findUserById(userId));
 
-        if (userDto.getEmail() != null) {
-            user.setEmail(userDto.getEmail());
+        if (newUserDto.getEmail() != null) {
+            user.setEmail(newUserDto.getEmail());
         }
 
-        if (userDto.getName() != null) {
-            user.setName(userDto.getName());
+        if (newUserDto.getName() != null) {
+            user.setName(newUserDto.getName());
         }
 
-        return UserMapper.toDto(userRepository.save(user));
+        return UserMapper.toUpdateResponseUserDto(userRepository.save(user));
     }
 
     @Override

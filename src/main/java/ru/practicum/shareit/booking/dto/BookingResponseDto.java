@@ -4,8 +4,8 @@ package ru.practicum.shareit.booking.dto;
 import lombok.*;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.model.Status;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.item.dto.ItemResponseDto;
+import ru.practicum.shareit.user.dto.CreateUserDto;
 
 import java.time.LocalDateTime;
 
@@ -23,9 +23,9 @@ public class BookingResponseDto {
 
     private LocalDateTime end;
 
-    private ItemDto item;
+    private ItemResponseDto item;
 
-    private UserDto booker;
+    private CreateUserDto booker;
 
     private Status status;
 }

@@ -7,13 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.item.comments.dto.CommentDto;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class ItemDto {
+public class ItemResponseDto {
     private Long id;
 
     @NotBlank
@@ -25,12 +26,11 @@ public class ItemDto {
     @NotNull
     private Boolean available;
 
-    private Long ownerId;
+    private User owner;
 
     private BookingRequestDto lastBooking;
 
     private BookingRequestDto nextBooking;
 
     private List<CommentDto> comments;
-
 }

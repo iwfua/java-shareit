@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemResponseDto;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +19,7 @@ public class CommentDto {
     @NotBlank
     private String text;
 
-    private ItemDto item;
+    private ItemResponseDto item;
 
     private String authorName;
 

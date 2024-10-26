@@ -11,7 +11,10 @@ import ru.practicum.shareit.item.comments.dto.CommentDto;
 import ru.practicum.shareit.item.comments.mapper.CommentsMapper;
 import ru.practicum.shareit.item.comments.model.Comment;
 import ru.practicum.shareit.item.comments.repository.CommentRepository;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.CreateItemRequestDto;
+import ru.practicum.shareit.item.dto.ItemResponseDto;
+import ru.practicum.shareit.item.dto.UpdateItemRequestDto;
+import ru.practicum.shareit.item.dto.UpdateItemResponseDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -34,14 +37,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public ItemDto findItemById(Long id) {
+    public ItemResponseDto findItemById(Long id) {
         List<CommentDto> comments = commentRepository.findByItemIdOrderByCreatedDesc(id)
                 .stream()
                 .map(CommentsMapper::toCommentDto)
                 .toList();
 
-        return ItemMapper.toDto(itemRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("item not found")))
+        return ItemMapper.toItemResponseDto(itemRepository.findById(id)
+                        .orElseThrow(() -> new NotFoundException("item not found")))
                 .toBuilder()
                 .comments(comments)
                 .build();
@@ -49,12 +52,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ItemDto> findItemsByOwnerId(Long ownerId) {
+    public List<ItemResponseDto> findItemsByOwnerId(Long ownerId) {
         validateUserExist(ownerId);
 
-        // Получаем все вещи пользователя
         return itemRepository.findAllByOwnerId(ownerId).stream()
-                .map(item -> ItemMapper.toDto(item).toBuilder()
+                .map(item -> ItemMapper.toItemResponseDto(item).toBuilder()
                         .comments(commentRepository.findByItemIdOrderByCreatedDesc(item.getId()).stream()
                                 .map(CommentsMapper::toCommentDto)
                                 .toList())
@@ -64,24 +66,27 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto addItem(ItemDto itemDto, Long ownerId) {
+    public ItemResponseDto addItem(CreateItemRequestDto itemDto, Long ownerId) {
         validateUserExist(ownerId);
 
-        Item item = ItemMapper.fromDtoWithOwner(itemDto, ownerId);
+        User owner = userRepository.findById(ownerId).orElseThrow(() -> new NotFoundException("user not found"));
 
-        return ItemMapper.toDto(itemRepository.save(item));
+        Item item = ItemMapper.fromDtoWithOwner(itemDto, owner);
+
+        return ItemMapper.toItemResponseDto(itemRepository.save(item));
     }
 
     @Override
     @Transactional
-    public ItemDto updateItem(ItemDto newItemDto, Long ownerId, Long itemId) {
+    public UpdateItemResponseDto updateItem(UpdateItemRequestDto newItemDto, Long ownerId, Long itemId) {
         validateUserExist(ownerId);
 
         if (findItemById(itemId) == null) {
             throw new NotFoundException("item not found");
         }
+        User owner = userRepository.findById(ownerId).orElseThrow(() -> new NotFoundException("user not found"));
 
-        Item oldItem = ItemMapper.fromDtoWithOwner(findItemById(itemId), ownerId);
+        Item oldItem = ItemMapper.fromItemResponseDtoWithOwnerId(findItemById(itemId), owner);
 
         if (newItemDto.getAvailable() != null) {
             oldItem.setIsAvailable(newItemDto.getAvailable());
@@ -95,14 +100,14 @@ public class ItemServiceImpl implements ItemService {
             oldItem.setDescription(newItemDto.getDescription());
         }
 
-        return ItemMapper.toDto(itemRepository.save(oldItem));
+        return ItemMapper.toUpdateResponseDto(itemRepository.save(oldItem));
     }
 
     @Override
-    @Transactional
-    public List<ItemDto> search(String text) {
+    @Transactional(readOnly = true)
+    public List<ItemResponseDto> search(String text) {
         return itemRepository.searchItemsByText(text).stream()
-                .map(ItemMapper::toDto)
+                .map(ItemMapper::toItemResponseDto)
                 .toList();
     }
 

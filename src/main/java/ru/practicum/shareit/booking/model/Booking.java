@@ -35,4 +35,21 @@ public class Booking {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Transient
+    public boolean isLastOrCurrent(LocalDateTime now) {
+        return status == status.APPROVED
+                && ((endDate.isEqual(now) || endDate.isBefore(now))
+                || (startDate.isEqual(now) || startDate.isBefore(now)));
+    }
+
+    @Transient
+    public boolean isFuture(LocalDateTime now) {
+        return status == status.APPROVED && startDate.isAfter(now);
+    }
+
+    @Transient
+    public boolean isFinished(LocalDateTime now) {
+        return getStatus() == status.APPROVED && getEndDate().isBefore(now);
+    }
 }
