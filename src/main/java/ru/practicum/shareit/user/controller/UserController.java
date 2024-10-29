@@ -3,7 +3,9 @@ package ru.practicum.shareit.user.controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UpdateRequestUserDto;
+import ru.practicum.shareit.user.dto.CreateUserDto;
+import ru.practicum.shareit.user.dto.UpdateResponseUserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 
@@ -19,32 +21,31 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable(name = "id") Integer userId) {
+    public CreateUserDto getUserById(@PathVariable(name = "id") Long userId) {
         log.info("Пришел GET-запрос /users/{}", userId);
-        UserDto userDto = userService.findUserById(userId);
+        CreateUserDto userDto = userService.findUserById(userId);
         log.info("Отправлен ответ с телом {}", userDto);
         return userDto;
     }
 
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+    public CreateUserDto createUser(@Valid @RequestBody CreateUserDto userDto) {
         log.info("Пришел POST-запрос /users с телом {}", userDto);
-        UserDto userDtoRes =  userService.createUser(userDto);
+        CreateUserDto userDtoRes =  userService.createUser(userDto);
         log.info("Отправлен POST-ответ с телом {}", userDtoRes);
         return userDtoRes;
     }
 
     @PatchMapping("/{id}")
-    public UserDto updateUser(@RequestBody UserDto userDto,
-                              @PathVariable(name = "id") Integer userId) {
+    public UpdateResponseUserDto updateUser(@RequestBody UpdateRequestUserDto userDto,
+                                            @PathVariable(name = "id") Long userId) {
         return userService.updateUser(userDto, userId);
     }
 
     @DeleteMapping("/{id}")
-    public UserDto deleteUser(@PathVariable(name = "id") Integer userId) {
+    public void deleteUser(@PathVariable(name = "id") Long userId) {
         log.info("Пришел DELETE-запрос /users/{}", userId);
-        UserDto userDto = userService.deleteUser(userId);
-        log.info("Отправлен DELETE-ответ с телом {}", userDto);
-        return userDto;
+        userService.deleteUser(userId);
+        log.info("Отправлен DELETE-ответ с телом id={}", userId);
     }
 }

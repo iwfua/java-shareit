@@ -9,8 +9,8 @@ import lombok.Data;
 @Builder(toBuilder = true)
 @Data
 @AllArgsConstructor
-public class UserDto {
-    private Integer id;
+public class CreateUserDto {
+    private Long id;
 
     @NotBlank
     private String name;

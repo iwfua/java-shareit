@@ -1,12 +1,17 @@
 package ru.practicum.shareit.user.service;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.dto.UserDto;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.dto.UpdateRequestUserDto;
+import ru.practicum.shareit.user.dto.UpdateResponseUserDto;
+import ru.practicum.shareit.user.dto.CreateUserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -15,22 +20,37 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDto findUserById(Integer id) {
-        return UserMapper.toDto(userRepository.findUserById(id));
+    @Override
+    @Transactional(readOnly = true)
+    public CreateUserDto findUserById(Long id) {
+        return UserMapper.toCreateUserDto(userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("user not found")));
     }
 
-    public UserDto createUser(UserDto userDto) {
+    @Override
+    public CreateUserDto createUser(CreateUserDto userDto) {
         User user = UserMapper.fromDto(userDto);
-        return UserMapper.toDto(userRepository.addUser(user));
+        return UserMapper.toCreateUserDto(userRepository.save(user));
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto, Integer userId) {
-        return UserMapper.toDto(userRepository.updateUser(UserMapper.fromDto(userDto), userId));
+    public UpdateResponseUserDto updateUser(UpdateRequestUserDto newUserDto, Long userId) {
+
+        User user = UserMapper.fromDto(findUserById(userId));
+
+        if (newUserDto.getEmail() != null) {
+            user.setEmail(newUserDto.getEmail());
+        }
+
+        if (newUserDto.getName() != null) {
+            user.setName(newUserDto.getName());
+        }
+
+        return UserMapper.toUpdateResponseUserDto(userRepository.save(user));
     }
 
     @Override
-    public UserDto deleteUser(Integer userId) {
-        return UserMapper.toDto(userRepository.deleteUser(userId));
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }

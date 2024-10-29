@@ -1,26 +1,36 @@
 package ru.practicum.shareit.item.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.Builder;
-import lombok.Data;
+import ru.practicum.shareit.user.model.User;
 
-@Data
+@Entity
+@Table(name = "items")
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Builder(toBuilder = true)
 public class Item {
 
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotBlank
+    @Column(name = "name")
     private String name;
 
-    @NotBlank
+    @Column(name = "description")
     private String description;
 
-    @NotNull
-    private Boolean available;
+    @Column(name = "is_available")
+    private Boolean isAvailable;
 
-    private final Integer ownerId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 }
