@@ -2,15 +2,11 @@ package ru.practicum.shareit.item;
 
 
 import org.junit.jupiter.api.Test;
-import ru.practicum.shareit.booking.dto.BookingResponseDto;
-import ru.practicum.shareit.item.comments.dto.CommentDto;
-import ru.practicum.shareit.item.comments.model.Comment;
 import ru.practicum.shareit.item.dto.CreateItemRequestDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.dto.UpdateItemResponseDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
@@ -18,7 +14,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ItemMapperTest {
 
