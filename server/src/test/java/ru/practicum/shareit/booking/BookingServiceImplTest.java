@@ -37,7 +37,6 @@ class BookingServiceImplTest {
 
     @InjectMocks
     private BookingServiceImpl bookingService;
-    
 
     @Mock
     private BookingRepository bookingRepository;
@@ -105,7 +104,7 @@ class BookingServiceImplTest {
 
     @Test
     void updateBooking_BookerTriesToUpdate_ShouldThrowValidationException() {
-         
+
         when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 
         assertThrows(ValidationException.class, () ->
@@ -115,7 +114,7 @@ class BookingServiceImplTest {
 
     @Test
     void updateBooking_NonOwnerTriesToUpdate_ShouldThrowValidationException() {
-         
+
         User anotherUser = User.builder().id(3L).build();
         when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 
@@ -126,7 +125,7 @@ class BookingServiceImplTest {
 
     @Test
     void findBookingById_OwnerAccess_Success() {
-         
+
         when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 
         BookingResponseDto result = bookingService.findBookingById(booking.getId(), owner.getId());
@@ -137,7 +136,7 @@ class BookingServiceImplTest {
 
     @Test
     void findBookingById_BookerAccess_Success() {
-         
+
         when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 
         BookingResponseDto result = bookingService.findBookingById(booking.getId(), booker.getId());
@@ -148,7 +147,7 @@ class BookingServiceImplTest {
 
     @Test
     void findBookingById_UnauthorizedAccess_ShouldThrowConflictException() {
-         
+
         User unauthorizedUser = User.builder().id(3L).build();
         when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
 
@@ -159,7 +158,7 @@ class BookingServiceImplTest {
 
     @Test
     void findBookingById_BookingNotFound_ShouldThrowNotFoundException() {
-         
+
         when(bookingRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () ->
@@ -169,7 +168,7 @@ class BookingServiceImplTest {
 
     @Test
     void findBookingByUserId_AllState_Success() {
-         
+
         when(bookingRepository.findByBookerIdOrderByStartDateDesc(booker.getId()))
                 .thenReturn(List.of(booking));
 

@@ -85,7 +85,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(userDto.getId()), Long.class))
                 .andExpect(jsonPath("$.name", is(userDto.getName())))
                 .andExpect(jsonPath("$.email", is(userDto.getEmail())));
-        verify(userService, times(1)).updateUser( any(), anyLong());
+        verify(userService, times(1)).updateUser(any(), anyLong());
     }
 
     @Test

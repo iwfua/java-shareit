@@ -146,6 +146,7 @@ class ItemServiceImplTest {
         assertEquals(item.getId(), result.getId());
         verify(itemRepository).save(any(Item.class));
     }
+
     @Test
     void updateItem_Success() {
         UpdateItemRequestDto updateDto = UpdateItemRequestDto.builder()

@@ -21,7 +21,7 @@ class ItemMapperTest {
 
     @Test
     void testToUpdateResponseDto() {
-        
+
         Item item = Item.builder()
                 .id(1L)
                 .name("Updated Item")
@@ -29,10 +29,10 @@ class ItemMapperTest {
                 .isAvailable(true)
                 .build();
 
-        
+
         UpdateItemResponseDto updateDto = ItemMapper.toUpdateResponseDto(item);
 
-        
+
         assertEquals(1L, updateDto.getId());
         assertEquals("Updated Item", updateDto.getName());
         assertEquals("Updated Description", updateDto.getDescription());
@@ -41,7 +41,7 @@ class ItemMapperTest {
 
     @Test
     void testToListItemDto_WithBookings() {
-        
+
         User owner = User.builder().id(1L).build();
         Item item1 = Item.builder()
                 .id(1L)
@@ -60,10 +60,10 @@ class ItemMapperTest {
 
         List<Item> items = List.of(item1, item2);
 
-        
+
         Collection<ItemResponseDto> itemDtos = ItemMapper.toListItemDto(items);
 
-        
+
         assertEquals(2, itemDtos.size());
 
         List<ItemResponseDto> dtoList = new ArrayList<>(itemDtos);
@@ -75,7 +75,7 @@ class ItemMapperTest {
 
     @Test
     void testFromRequestDto() {
-        
+
         CreateItemRequestDto itemDto = CreateItemRequestDto.builder()
                 .id(1L)
                 .name("New Item")
@@ -84,10 +84,10 @@ class ItemMapperTest {
                 .owner(User.builder().id(2L).build())
                 .build();
 
-        
+
         Item item = ItemMapper.fromRequestDto(itemDto);
 
-        
+
         assertEquals(1L, item.getId());
         assertEquals("New Item", item.getName());
         assertEquals("New Description", item.getDescription());
@@ -97,7 +97,7 @@ class ItemMapperTest {
 
     @Test
     void testFromDtoWithOwner() {
-        
+
         CreateItemRequestDto itemDto = CreateItemRequestDto.builder()
                 .id(1L)
                 .name("New Item")
@@ -106,10 +106,8 @@ class ItemMapperTest {
                 .build();
         User owner = User.builder().id(2L).name("Owner").build();
 
-        
         Item item = ItemMapper.fromDtoWithOwner(itemDto, owner);
 
-        
         assertEquals(1L, item.getId());
         assertEquals("New Item", item.getName());
         assertEquals("New Description", item.getDescription());
@@ -119,7 +117,7 @@ class ItemMapperTest {
 
     @Test
     void testFromItemResponseDto() {
-        
+
         ItemResponseDto itemResponseDto = ItemResponseDto.builder()
                 .id(1L)
                 .name("Response Item")
@@ -128,10 +126,8 @@ class ItemMapperTest {
                 .owner(User.builder().id(2L).build())
                 .build();
 
-        
         Item item = ItemMapper.fromItemResponseDto(itemResponseDto);
 
-        
         assertEquals(1L, item.getId());
         assertEquals("Response Item", item.getName());
         assertEquals("Response Description", item.getDescription());
@@ -141,7 +137,7 @@ class ItemMapperTest {
 
     @Test
     void testFromItemResponseDtoWithOwnerId() {
-        
+
         ItemResponseDto itemResponseDto = ItemResponseDto.builder()
                 .id(1L)
                 .name("Response Item")
@@ -150,10 +146,8 @@ class ItemMapperTest {
                 .build();
         User owner = User.builder().id(2L).name("Owner").build();
 
-        
         Item item = ItemMapper.fromItemResponseDtoWithOwnerId(itemResponseDto, owner);
 
-        
         assertEquals(1L, item.getId());
         assertEquals("Response Item", item.getName());
         assertEquals("Response Description", item.getDescription());
@@ -163,7 +157,6 @@ class ItemMapperTest {
 
     @Test
     void testToListItemDto_EmptyList() {
-        
         Collection<ItemResponseDto> itemDtos = ItemMapper.toListItemDto(Collections.emptyList());
 
         assertTrue(itemDtos.isEmpty());
