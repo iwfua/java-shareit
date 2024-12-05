@@ -13,7 +13,7 @@ import java.util.Collection;
 @RestController
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
-public class ItemRequestController {
+public class RequestController {
 
     private final ItemRequestService itemRequestService;
     public static final String HEADER = "X-Sharer-User-Id";
