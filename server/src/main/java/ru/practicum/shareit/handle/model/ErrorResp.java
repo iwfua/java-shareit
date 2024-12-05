@@ -1,4 +1,12 @@
 package ru.practicum.shareit.handle.model;
 
-public record ErrorResp(String error) {
+import lombok.Getter;
+
+@Getter
+public  class ErrorResp {
+    private String error;
+
+    public ErrorResp(String error) {
+        this.error = error;
+    }
 }
