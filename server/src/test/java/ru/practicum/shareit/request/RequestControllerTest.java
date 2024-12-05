@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.request.controller.RequestController;
+import ru.practicum.shareit.request.controller.ItemRequestController;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(RequestController.class)
+@WebMvcTest(ItemRequestController.class)
 @AutoConfigureMockMvc
 public class RequestControllerTest {
 
@@ -45,7 +45,7 @@ public class RequestControllerTest {
     private ItemRequestService itemRequestService;
 
     @InjectMocks
-    private RequestController controller;
+    private ItemRequestController controller;
 
     @Autowired
     private MockMvc mvc;

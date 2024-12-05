@@ -9,7 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.item.comments.dto.CommentDto;
-import ru.practicum.shareit.item.controller.ItemRequestController;
+import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.item.dto.CreateItemRequestDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.dto.UpdateItemRequestDto;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = ItemRequestController.class)
+@WebMvcTest(controllers = ItemController.class)
 class ItemControllerTest {
 
     @Autowired
