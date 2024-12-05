@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -247,5 +248,95 @@ class BookingServiceImplTest {
 
         assertThrows(ValidationException.class, () ->
                 bookingService.validationBooking(invalidDto, item, booker));
+    }
+
+    @Test
+    void findBookingByUserId_CURRENT() {
+        when(bookingRepository.findCurrentBookings(anyLong(), any())).thenReturn(List.of());
+
+        List<BookingResponseDto> result = bookingService.findBookingByUserId(booker.getId(), "CURRENT");
+
+        assertNotNull(result);
+        verify(bookingRepository).findCurrentBookings(anyLong(), any());
+    }
+
+    @Test
+    void findBookingByUserId_PAST() {
+        when(bookingRepository.findByBookerIdAndEndDateBeforeOrderByStartDateDesc(anyLong(), any())).thenReturn(List.of());
+
+        List<BookingResponseDto> result = bookingService.findBookingByUserId(booker.getId(), "PAST");
+
+        assertNotNull(result);
+        verify(bookingRepository).findByBookerIdAndEndDateBeforeOrderByStartDateDesc(anyLong(), any());
+    }
+
+    @Test
+    void findBookingByUserId_FUTURE() {
+        when(bookingRepository.findByBookerIdAndStartDateAfterOrderByStartDateDesc(anyLong(), any())).thenReturn(List.of());
+
+        List<BookingResponseDto> result = bookingService.findBookingByUserId(booker.getId(), "FUTURE");
+
+        assertNotNull(result);
+        verify(bookingRepository).findByBookerIdAndStartDateAfterOrderByStartDateDesc(anyLong(), any());
+    }
+
+    @Test
+    void findBookingByUserId_WAITING() {
+        when(bookingRepository.findByBookerIdAndStatusOrderByStartDateDesc(anyLong(), eq(Status.WAITING))).thenReturn(List.of());
+
+        List<BookingResponseDto> result = bookingService.findBookingByUserId(booker.getId(), "WAITING");
+
+        assertNotNull(result);
+        verify(bookingRepository).findByBookerIdAndStatusOrderByStartDateDesc(anyLong(), eq(Status.WAITING));
+    }
+
+    @Test
+    void findBookingByUserId_REJECTED() {
+        when(bookingRepository.findByBookerIdAndStatusOrderByStartDateDesc(anyLong(), eq(Status.REJECTED))).thenReturn(List.of());
+
+        List<BookingResponseDto> result = bookingService.findBookingByUserId(booker.getId(), "REJECTED");
+
+        assertNotNull(result);
+        verify(bookingRepository).findByBookerIdAndStatusOrderByStartDateDesc(anyLong(), eq(Status.REJECTED));
+    }
+
+    @Test
+    void validationBooking_EndDateBeforeStartDate() {
+        BookingRequestDto invalidDto = new BookingRequestDto(
+                now.plusDays(2),
+                now.plusDays(1),
+                item.getId()
+        );
+
+        assertThrows(ValidationException.class, () ->
+                bookingService.validationBooking(invalidDto, item, booker));
+    }
+
+    @Test
+    void validationBooking_OwnerIsBooker() {
+        Item ownedItem = Item.builder()
+                .id(1L)
+                .name("Test Item")
+                .description("Test Description")
+                .owner(booker)
+                .isAvailable(true)
+                .build();
+
+        assertThrows(ConflictException.class, () ->
+                bookingService.validationBooking(bookingRequestDto, ownedItem, booker));
+    }
+
+    @Test
+    void validationBooking_ItemUnavailable() {
+        Item unavailableItem = Item.builder()
+                .id(1L)
+                .name("Test Item")
+                .description("Test Description")
+                .owner(owner)
+                .isAvailable(false)
+                .build();
+
+        assertThrows(ValidationException.class, () ->
+                bookingService.validationBooking(bookingRequestDto, unavailableItem, booker));
     }
 }
