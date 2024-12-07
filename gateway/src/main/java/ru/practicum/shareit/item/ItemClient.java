@@ -6,7 +6,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
@@ -17,7 +17,7 @@ import ru.practicum.shareit.item.dto.UpdateItemDto;
 import java.util.Collections;
 
 
-@Service
+@Component
 public class ItemClient extends BaseClient {
     private static final String API_PREFIX = "/items";
 

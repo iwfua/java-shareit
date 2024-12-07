@@ -48,9 +48,10 @@ public class BookingController {
 
     @GetMapping
     public List<BookingResponseDto> findBookingsByUser(@RequestHeader(OWNER_ID) Long ownerId,
-                                                       @RequestParam(name = "state", defaultValue = "ALL", required = false) String state) {
+                                                       @RequestParam(name = "state", defaultValue = "ALL") String state) {
         log.info("Пришел GET-запрос на получение бронирований пользователя с ownerId={} и состоянием state={}", ownerId, state);
         List<BookingResponseDto> response = bookingService.findBookingByUserId(ownerId, state);
+        System.out.println();
         log.info("Отправлен GET-ответ с телом bookingResponseDtos={}", response);
         return response;
     }
